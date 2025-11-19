@@ -1,0 +1,190 @@
+LAMBDA Codes:
+
+Version - 1: Fully functional serverless API
+---------------
+import random
+import json
+
+def lambda_handler(event, context):
+    facts = [
+        "AWS S3 was launched in 2006 and still rules cloud storage.",
+        "Cloud computing can save companies up to 30% on IT costs.",
+        "EC2 was one of the first AWS services to change IT forever.",
+        "AWS offers more than 200 services — that’s more than Starbucks drinks!",
+        "Cloud lets you pay-as-you-go, just like your Netflix subscription.",
+        "The name 'Amazon Web Services' was first used back in 2002.",
+        "AWS data centers are so secure they require palm scanners.",
+        "Netflix runs most of its infrastructure on AWS.",
+        "Amazon DynamoDB can handle more than 10 trillion requests per day.",
+        "AWS Lambda was launched in 2014 and started the serverless trend.",
+        "Cloud reduces CO₂ emissions by optimizing energy usage.",
+        "AWS regions have multiple Availability Zones for reliability.",
+        "Amazon originally created S3 to solve its own scaling issues.",
+        "More than 80% of Fortune 500 companies use AWS.",
+        "Cloud helps startups scale globally without huge upfront costs.",
+        "Amazon’s first region outside the US was launched in Ireland (2007).",
+        "AWS provides free tiers so students can build projects affordably.",
+        "AWS CloudFront is one of the largest CDNs in the world.",
+        "Serverless means you never patch servers — AWS does it for you!",
+        "AWS is the market leader in cloud with ~32% share (as of 2025)."
+    ]
+
+    fact = random.choice(facts)
+    return {
+        "statusCode": 200,
+        "headers": {"Content-Type": "application/json"},
+        "body": json.dumps({"fact" : fact})
+    }
+
+---------------
+Version - 2: Fetching Data from DynamoDB Database. (data-driven)
+
+import boto3
+import random
+import json
+
+# Create DynamoDB client
+dynamodb = boto3.resource("dynamodb")
+table = dynamodb.Table("CloudFacts")
+
+def lambda_handler(event, context):
+    # Scan entire table (not efficient for huge tables, but fine here)
+    response = table.scan()
+    items = response.get("Items", [])
+
+    if not items:
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"error": "No facts found"})
+        }
+
+    # Pick random fact
+    fact = random.choice(items)["FactText"]
+
+    return {
+        "statusCode": 200,
+        "headers": {"Content-Type": "application/json"},
+        "body": json.dumps({"fact": fact})
+    }
+
+
+---------------
+Version - 3: GenAI Version 
+
+import boto3
+import random
+import json
+
+
+# DynamoDB connection
+dynamodb = boto3.resource("dynamodb")
+table = dynamodb.Table("CloudFacts")
+
+
+# Bedrock client
+bedrock = boto3.client("bedrock-runtime")
+
+
+def lambda_handler(event, context):
+    # Fetch all facts from DynamoDB
+    response = table.scan()
+    items = response.get("Items", [])
+    if not items:
+        return {
+            "statusCode": 200,
+            "headers": {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type"
+            },
+            "body": json.dumps({"fact": "No facts available in DynamoDB."})
+        }
+
+
+    fact = random.choice(items)["FactText"]
+
+
+    # Messages for Claude 3.5 Sonnet
+    messages = [
+        {
+            "role": "user",
+            "content": f"Take this cloud computing fact and make it fun and engaging in 1-2 sentences maximum. Keep it short and witty: {fact}"
+        }
+    ]
+
+
+    body = {
+        "anthropic_version": "bedrock-2023-05-31",
+        "max_tokens": 100,
+        "messages": messages,
+        "temperature": 0.7
+    }
+
+
+    try:
+        # Call Claude 3.5 Sonnet on Bedrock
+        resp = bedrock.invoke_model(
+            modelId="anthropic.claude-3-5-sonnet-20240620-v1:0",
+            body=json.dumps(body),
+            accept="application/json",
+            contentType="application/json"
+        )
+
+
+        # Parse response
+        result = json.loads(resp["body"].read())
+        witty_fact = ""
+
+
+        # Claude v3 response: look inside "content"
+        if "content" in result and result["content"]:
+            for block in result["content"]:
+                if block.get("type") == "text":
+                    witty_fact = block["text"].strip()
+                    break
+
+
+        # Fallback if empty or too long
+        if not witty_fact or len(witty_fact) > 300:
+            witty_fact = fact
+
+
+    except Exception as e:
+        print(f"Bedrock error: {e}")
+        witty_fact = fact
+
+
+    return {
+        "statusCode": 200,
+        "headers": {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type"
+        },
+        "body": json.dumps({"fact": witty_fact})
+    }
+
+--------
+
+DynamoDB Table:
+---
+Sample Items
+
+{ "FactID": "1", "FactText": "AWS S3 was one of the very first AWS services, launched in 2006." }
+{ "FactID": "2", "FactText": "Netflix runs almost all of its infrastructure on AWS." }
+{ "FactID": "3", "FactText": "Cloud computing can save companies up to 30% on IT costs." }
+{ "FactID": "4", "FactText": "NASA uses AWS to store and share Mars mission data with the public." }
+{ "FactID": "5", "FactText": "AWS has more than 200 fully featured services today." }
+{ "FactID": "6", "FactText": "The 'cloud' doesn’t float in the sky, it’s made of giant data centers on Earth." }
+{ "FactID": "7", "FactText": "More than 90% of Fortune 100 companies use AWS." }
+{ "FactID": "8", "FactText": "AWS data centers are so secure that they require retina scans and 24/7 guards." }
+{ "FactID": "9", "FactText": "Serverless doesn’t mean there are no servers, it just means you don’t manage them." }
+{ "FactID": "10", "FactText": "Each AWS Availability Zone has at least one independent power source and cooling system." }
+{ "FactID": "11", "FactText": "Amazon once accidentally took down parts of the internet when S3 had an outage in 2017." }
+{ "FactID": "12", "FactText": "The fastest-growing AWS service is Amazon SageMaker, used for Machine Learning." }
+{ "FactID": "13", "FactText": "The word 'cloud' became popular in the 1990s as a metaphor for the internet." }
+{ "FactID": "14", "FactText": "AWS Lambda can automatically scale from zero to thousands of requests per second." }
+{ "FactID": "15", "FactText": "More data is stored in the cloud today than in all personal computers combined." }
+
