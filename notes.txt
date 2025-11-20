@@ -1,5 +1,8 @@
 LAMBDA Codes:
 
+<!-- API URL:
+https://ljmj29fbz4.execute-api.ap-south-1.amazonaws.com/funfact -->
+
 Version - 1: Fully functional serverless API
 ---------------
 import random

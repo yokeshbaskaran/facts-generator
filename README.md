@@ -1,6 +1,6 @@
 # facts-generator
 
-- Cloud Fun Facts 📔 Generator using AWS Services.
+A Cloud Fun Facts 📔 Generator built using AWS services. - Created from scratch with guidance from "Tech with Lucy’s AWS course". - Generates fun cloud facts using serverless and GenAI technologies.
 
 ## 🛠️ Services used:
 
@@ -11,20 +11,17 @@
 5. **AWS Amplify:** Hosting service for the React frontend.
 6. **AWS IAM:** Identity and Access Management for secure permissions.
 
-## Steps:
+## 🚀 Steps:
 
 - Deploy Backend with AWS Lambda + API Gateway
 - Enhance with DynamoDB (store facts in a table)
 - Integrate Amazon Bedrock (GenAI) to make facts
 - Deploy Frontend with AWS Amplify (to display facts)
 
-## Architecture Diagram:
+## 📌 Architecture Diagram:
 
 <img width="1147" height="621" alt="Image" src="https://github.com/user-attachments/assets/1fddc984-86bf-4378-bbd3-b31c4e3970fb" />
 
-## Output:
+## 📸 Output:
 
 ![Image](https://github.com/user-attachments/assets/c1e27cef-c553-4366-8cad-c2e390cab901)
-
-API URL:
-https://ljmj29fbz4.execute-api.ap-south-1.amazonaws.com/funfact
