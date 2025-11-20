@@ -1,27 +1,40 @@
+---
 # facts-generator
 
-A Cloud Fun Facts 📔 Generator built using AWS services. - Created from scratch with guidance from "Tech with Lucy’s AWS course". - Generates fun cloud facts using serverless and GenAI technologies.
+A **Cloud Fun Facts 📔 Generator** built using AWS services.
 
-## 🛠️ Services used:
+* Created from scratch with guidance from *Tech with Lucy’s AWS course*
+* Generates fun cloud facts using Serverless + GenAI technologies
+---
 
-1. **AWS Lambda:** Serverless backend to generate cloud fun facts.
-2. **Amazon API Gateway:** Exposes the Lambda as a REST API endpoint.
-3. **Amazon DynamoDB:** Database for storing facts.
-4. **Amazon Bedrock:** Generative AI to make facts witty.
-5. **AWS Amplify:** Hosting service for the React frontend.
-6. **AWS IAM:** Identity and Access Management for secure permissions.
+## 🛠️ Services Used
 
-## 🚀 Steps:
+1. **AWS Lambda:** Serverless backend for generating fun facts
+2. **Amazon API Gateway:** Exposes the Lambda function via a REST API
+3. **Amazon DynamoDB:** Stores fun facts in a NoSQL table
+4. **Amazon Bedrock:** Makes the facts witty using generative AI
+5. **AWS Amplify:** Hosts and deploys the React frontend
+6. **AWS IAM:** Manages secure access and permissions
 
-- Deploy Backend with AWS Lambda + API Gateway
-- Enhance with DynamoDB (store facts in a table)
-- Integrate Amazon Bedrock (GenAI) to make facts
-- Deploy Frontend with AWS Amplify (to display facts)
+---
 
-## 📌 Architecture Diagram:
+## 🚀 Project Steps
 
-<img width="1147" height="621" alt="Image" src="https://github.com/user-attachments/assets/1fddc984-86bf-4378-bbd3-b31c4e3970fb" />
+- Deploy backend using AWS Lambda + API Gateway
+- Add DynamoDB for storing facts
+- Integrate Amazon Bedrock for witty fact generation
+- Deploy frontend using AWS Amplify
 
-## 📸 Output:
+---
 
-![Image](https://github.com/user-attachments/assets/c1e27cef-c553-4366-8cad-c2e390cab901)
+## 📌 Architecture Diagram
+
+<img width="1147" height="621" alt="Architecture Diagram" src="https://github.com/user-attachments/assets/1fddc984-86bf-4378-bbd3-b31c4e3970fb" />
+
+---
+
+## 📸 Output
+
+![Output Screenshot](https://github.com/user-attachments/assets/c1e27cef-c553-4366-8cad-c2e390cab901)
+
+---
